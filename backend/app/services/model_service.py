@@ -12,12 +12,9 @@ def model_files_ready() -> bool:
 
 
 @lru_cache(maxsize=1)
-def get_model_bundle():
+def _load_model_bundle(model_mtime_ns: int, class_mtime_ns: int):
     # Import TensorFlow hanya pada saat prediksi pertama.
     from tensorflow.keras.models import load_model
-
-    if not model_files_ready():
-        raise FileNotFoundError("Model belum tersedia. Jalankan notebook, lalu salin file hasil training ke backend/models/.")
 
     model = load_model(MODEL_PATH, compile=False)
     with CLASS_NAMES_PATH.open(encoding="utf-8") as file:
@@ -33,6 +30,12 @@ def get_model_bundle():
 
     height, width = int(input_shape[1]), int(input_shape[2])
     return model, classes, width, height
+
+
+def get_model_bundle():
+    if not model_files_ready():
+        raise FileNotFoundError("Model belum tersedia. Jalankan notebook, lalu salin file hasil training ke backend/models/.")
+    return _load_model_bundle(MODEL_PATH.stat().st_mtime_ns, CLASS_NAMES_PATH.stat().st_mtime_ns)
 
 
 def predict_image(content: bytes) -> PredictionResponse:

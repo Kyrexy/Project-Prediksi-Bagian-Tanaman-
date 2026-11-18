@@ -5,12 +5,22 @@ from app.schemas.prediction import PredictionResponse
 from app.services.model_service import predict_image
 
 router = APIRouter(tags=["prediction"])
+ALLOWED_CONTENT_TYPES = {
+    "image/jpeg",
+    "image/jpg",
+    "image/pjpeg",
+    "image/png",
+    "image/webp",
+    "application/octet-stream",
+    None,
+    "",
+}
 
 
 @router.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
-    if file.content_type not in ("image/jpeg", "image/png"):
-        raise HTTPException(status_code=400, detail="Gunakan gambar JPG atau PNG")
+    if file.content_type not in ALLOWED_CONTENT_TYPES:
+        raise HTTPException(status_code=400, detail="Gunakan gambar JPG, PNG, atau WEBP")
 
     try:
         content = await file.read(MAX_IMAGE_BYTES + 1)
@@ -24,5 +34,5 @@ async def predict(file: UploadFile = File(...)):
 
     try:
         return predict_image(content)
-    except FileNotFoundError as exc:
+    except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
