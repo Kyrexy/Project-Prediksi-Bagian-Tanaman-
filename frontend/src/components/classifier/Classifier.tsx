@@ -14,28 +14,37 @@ export function Classifier() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!file) { setPreview(null); return; }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   function chooseFile(event: ChangeEvent<HTMLInputElement>) {
     const next = event.target.files?.[0] ?? null;
+    event.target.value = "";
     setResult(null);
     setError("");
-    if (!next) { setFile(null); return; }
-    if (!["image/jpeg", "image/png"].includes(next.type)) {
+    if (!next) {
       setFile(null);
-      setError("Pilih gambar JPG atau PNG.");
+      setPreview(null);
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/pjpeg", "image/png", "image/webp"];
+    const hasAllowedExt = /\.(jpe?g|png|webp)$/i.test(next.name);
+    if (!allowedTypes.includes(next.type) && !(next.type === "" && hasAllowedExt)) {
+      setFile(null);
+      setPreview(null);
+      setError("Pilih gambar JPG, PNG, atau WEBP.");
       return;
     }
     if (next.size > 5 * 1024 * 1024) {
       setFile(null);
+      setPreview(null);
       setError("Ukuran gambar maksimal 5 MB.");
       return;
     }
     setFile(next);
+    setPreview(URL.createObjectURL(next));
   }
 
   async function classify() {

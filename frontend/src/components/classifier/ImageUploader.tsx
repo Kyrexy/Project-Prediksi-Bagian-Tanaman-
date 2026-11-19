@@ -21,10 +21,10 @@ export function ImageUploader({ file, preview, loading, error, onChange, onPredi
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="Pratinjau gambar" className="max-h-64 max-w-full rounded-lg object-contain" />
         ) : (
-          <><span className="text-5xl">🖼️</span><span className="mt-3 font-semibold">Klik untuk memilih gambar</span><span className="mt-2 text-sm text-slate-500">JPG/PNG • Maksimal 5 MB</span></>
+          <><span className="text-5xl">🖼️</span><span className="mt-3 font-semibold">Klik untuk memilih gambar</span><span className="mt-2 text-sm text-slate-500">JPG/PNG/WEBP • Maksimal 5 MB</span></>
         )}
       </label>
-      <input id="file-input" type="file" accept="image/jpeg,image/png" onChange={onChange} className="sr-only" />
+      <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" onChange={onChange} className="sr-only" />
       <p className="mt-3 truncate text-sm text-slate-500">{file?.name ?? "Belum ada file dipilih"}</p>
       <button onClick={onPredict} disabled={!file || loading} className="mt-5 w-full rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-slate-300">
         {loading ? "Sedang memproses..." : "Klasifikasikan Gambar"}

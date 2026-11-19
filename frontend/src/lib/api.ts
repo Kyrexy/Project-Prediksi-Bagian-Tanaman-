@@ -6,17 +6,28 @@ export async function predictPlant(file: File): Promise<Prediction> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${API_URL}/predict`, {
-    method: "POST",
-    body: formData,
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/predict`, {
+      method: "POST",
+      body: formData,
+    });
+  } catch {
+    throw new Error("Gagal menghubungi server backend. Pastikan FastAPI berjalan.");
+  }
 
-  const body: unknown = await response.json();
+  let body: unknown = null;
+  try {
+    body = await response.json();
+  } catch {
+    body = null;
+  }
+
   if (!response.ok) {
     if (body && typeof body === "object" && "detail" in body && typeof body.detail === "string") {
       throw new Error(body.detail);
     }
-    throw new Error("Prediksi gagal.");
+    throw new Error(`Prediksi gagal (HTTP ${response.status}).`);
   }
   return body as Prediction;
 }

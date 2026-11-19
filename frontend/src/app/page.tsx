@@ -9,7 +9,7 @@ export default function Home() {
         <p className="mb-2 text-xs font-bold uppercase tracking-widest text-emerald-700">Computer Vision</p>
         <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">Klasifikasi Bagian Tanaman</h1>
         <p className="mt-3 max-w-2xl text-slate-600">
-          Unggah satu gambar yang berfokus pada akar, daun, batang, atau buah.
+          Unggah satu gambar yang berfokus pada akar, batang, buah, bunga, atau daun.
           Model CNN akan memprediksi bagian tanaman tersebut.
         </p>
         <Classifier />

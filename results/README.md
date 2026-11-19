@@ -1,1 +1,1 @@
-Simpan hasil eksperimen untuk paper UAS di sini, misalnya grafik `training_accuracy.png`, `training_loss.png`, confusion matrix, dan tabel classification report. Dataset dan hasil eksperimen belum disertakan.
+Simpan hasil eksperimen untuk paper UAS di sini, seperti `training_curves.png`, `confusion_matrix.png`, `classification_report.txt`, dan `metrics.json`.
